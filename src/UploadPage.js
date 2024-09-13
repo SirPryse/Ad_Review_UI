@@ -1,6 +1,21 @@
 import React, { useState } from 'react';
-import { Button, Box, Typography, Input, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Button, Box, Typography, Input, Dialog, DialogTitle, DialogContent, DialogActions  } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
+
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 function UploadPage() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -94,17 +109,47 @@ function UploadPage() {
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Upload your Advertisement to be Reviewed
-      </Typography>
+    <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Typography variant="h4" gutterBottom>
+      Upload your Advertisement to be Reviewed
+    </Typography>
 
-      <Input type="file" onChange={handleFileChange} />
-      {fileError && <Typography color="error">{fileError}</Typography>}
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: 400 }}>
+      <Button
+        component="label"
+        variant="contained"
+        startIcon={<CloudUploadIcon />}
+        sx={{ mb: 2, width: '100%' }}
+      >
+        Select File
+        <VisuallyHiddenInput
+          type="file"
+          onChange={handleFileChange}
+        />
+      </Button>
 
-      <Button variant="contained" color="primary" onClick={handleOpenDialog} disabled={!selectedFile}>
+      {fileError && (
+        <Typography color="error" sx={{ mb: 2, textAlign: 'center' }}>
+          {fileError}
+        </Typography>
+      )}
+
+      {selectedFile && (
+        <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+          Selected file: {selectedFile.name}
+        </Typography>
+      )}
+
+      <Button 
+        variant="contained" 
+        color="primary" 
+        onClick={handleOpenDialog} 
+        disabled={!selectedFile}
+        sx={{ width: '100%' }}
+      >
         Upload File
       </Button>
+    </Box>
 
       <Dialog open={isUploadDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>Upload File</DialogTitle>

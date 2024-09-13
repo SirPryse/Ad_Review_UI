@@ -10,7 +10,19 @@ function App() {
     <Router>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography 
+            variant="h6" 
+            component={Link} 
+            to="/" 
+            sx={{ 
+              flexGrow: 1, 
+              textDecoration: 'none', 
+              color: 'inherit',
+              '&:hover': {
+                cursor: 'pointer',
+              },
+            }}
+          >
             Suggestify Ads
           </Typography>
           <Button color="inherit" component={Link} to="/">
