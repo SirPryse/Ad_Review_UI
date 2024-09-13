@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Container, AppBar, Toolbar, Typography, Button } from '@mui/material';
+import UploadPage from './UploadPage';
+import ViewDataPage from './ViewDataPage';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Suggestify Ads
+          </Typography>
+          <Button color="inherit" component={Link} to="/">
+            Upload Ad
+          </Button>
+          <Button color="inherit" component={Link} to="/view-data">
+            View Ad Suggestions
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Container>
+        <Routes>
+          <Route path="/" element={<UploadPage />} />
+          <Route path="/view-data" element={<ViewDataPage />} />
+        </Routes>
+      </Container>
+    </Router>
   );
 }
 
