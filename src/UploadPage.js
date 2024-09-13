@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Box, Typography, Input, Dialog, DialogTitle, DialogContent, DialogActions  } from '@mui/material';
+import { Snackbar, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
@@ -21,8 +22,12 @@ function UploadPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState('');
   const [isUploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  const AWS_URL = process.env.REACT_APP_AWS_BASE_URL;
+
   
-  // Allowed MIME types for images and videos
   const allowedImageTypes = [
     'image/png',
     'image/jpeg',
@@ -62,7 +67,7 @@ function UploadPage() {
 
   const fetchPresignedURL = async () => {
     try {
-      const response = await axios.post('https://b8kvafiaxj.execute-api.us-east-1.amazonaws.com/presigned-url', {
+      const response = await axios.post(`${AWS_URL}/presigned-url`, {
         fileName: selectedFile.name,
         fileType: selectedFile.type,
       });
@@ -88,9 +93,10 @@ function UploadPage() {
         });
 
       // Success
-      alert('File uploaded successfully!');
       setSelectedFile(null); // Reset file selection after upload
       setUploadDialogOpen(false); // Close the dialog
+      setSnackbarMessage('File uploaded successfully!');
+      setSnackbarOpen(true);
     } catch (error) {
       console.error('Error uploading file:', error);
       setFileError('Failed to upload file.');
@@ -108,13 +114,17 @@ function UploadPage() {
     setSelectedFile(null);
   };
 
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
-    <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box sx={{ height: '50vh', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
     <Typography variant="h4" gutterBottom>
       Upload your Advertisement to be Reviewed
     </Typography>
 
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: 400 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: 300 }}>
       <Button
         component="label"
         variant="contained"
@@ -165,6 +175,16 @@ function UploadPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5}
+        onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
     </Box>
   );
 }

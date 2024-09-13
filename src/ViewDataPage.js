@@ -11,7 +11,7 @@ function ViewDataPage() {
   const [pageSize] = useState(10);  // Set the page size
   const [selectedAd, setSelectedAd] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const AWS_URL = process.env.AWS_BASE_URL
+  const AWS_URL = process.env.REACT_APP_AWS_BASE_URL;
 
   useEffect(() => {
     fetchData();
@@ -21,7 +21,7 @@ function ViewDataPage() {
   const fetchData = async (lastKey = null) => {
     setLoading(true);
     try {
-      const response = await axios.post('https://b8kvafiaxj.execute-api.us-east-1.amazonaws.com/get-ads', {
+      const response = await axios.post(`${AWS_URL}/get-ads`, {
         pageSize: pageSize,
         lastEvaluatedKey: lastKey,
       });
